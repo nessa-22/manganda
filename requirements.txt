@@ -3,3 +3,4 @@ torchvision==0.10.1
 torchaudio==0.9.1
 joblib
 tqdm
+torchsummary
