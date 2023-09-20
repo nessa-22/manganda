@@ -5,3 +5,4 @@ joblib
 tqdm
 torchsummary
 danbooru-pretrained
+danbooru_resnet
