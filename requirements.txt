@@ -4,4 +4,4 @@ torchaudio==0.9.1
 joblib
 tqdm
 torchsummary
-danbooru_resnet==1.0.0
+danbooru-pretrained
