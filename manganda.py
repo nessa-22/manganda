@@ -105,7 +105,7 @@ def file_upload():
 
 
 if __name__ == "__main__":
-    st.image('manganda.PNG', width=1500)
+    st.image('manganda.png', width=1500)
     model = torch.load('model.pth')
 
     file_upload()
