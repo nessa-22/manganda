@@ -82,6 +82,59 @@ def train_model(ManGanda, criterion, optimizer, num_epochs=125):
     return ManGanda.model
 
 
+# class MangaModel(nn.Module):
+#     """Regression Model for Rating Mangas"""
+#     def __init__(self, dataset, dataloader, num_epochs=500, save_file='saves/MangaModel.pth'):
+#         super(MangaModel, self).__init__()
+#         """Initialize with the trained parameters, else retrain from scratch
+#         """        
+#         # Get the device for loading the model
+#         self.device = torch.device('cuda' if torch.cuda.is_available()
+#                                    else 'cpu')
+        
+#         # Embed the dataset and dataloader
+#         self.dataset = dataset
+#         self.dataloader = dataloader
+        
+#         self.model = torch.hub.load('RF5/danbooru-pretrained', 'resnet18',
+#                                     pretrained=False)
+
+#         # Load the pretrained weights
+#         checkpoint = torch.hub.load_state_dict_from_url(
+#             'https://github.com/RF5/danbooru-pretrained/releases/download/v0.1/resnet18-3f77756f.pth',
+#             map_location=self.device.type
+#         )
+#         state_dict = {key.replace("module.", ""): value 
+#                       for key, value in checkpoint.items()}
+
+#         self.model.load_state_dict(state_dict)
+
+#         # Freezing the weights of the pretrained model
+#         for param in self.model[0].parameters():
+#             param.requires_grad = False
+#         self.model[1][8] = nn.Linear(512, 1)
+#         self.model[1].append(nn.Threshold(0, 10))
+            
+#         self.model.to(self.device)
+#         summary(self.model, (3, 224, 224))
+        
+#         # Set the loss function for Regression
+#         self.criterion = nn.MSELoss()
+
+#         # Only the parameters of the regressor are being optimized
+#         self.optimizer = optim.Adam(self.model[1].parameters(), lr=0.001)
+        
+#         # Load the retrained model, else, train
+#         try:
+#             self.model.load_state_dict(torch.load(save_file))
+#         except:
+#             self.model = train_model(self,
+#                                      self.criterion,
+#                                      self.optimizer,
+#                                      num_epochs=num_epochs)
+#     def forward(self, X):
+#         return self.model(X)
+
 class MangaModel(nn.Module):
     """Regression Model for Rating Mangas"""
     def __init__(self, dataset, dataloader, num_epochs=500, save_file='saves/MangaModel.pth'):
@@ -91,24 +144,13 @@ class MangaModel(nn.Module):
         # Get the device for loading the model
         self.device = torch.device('cuda' if torch.cuda.is_available()
                                    else 'cpu')
+        self.model = resnet18(pretrained=False)
+        self.model.to(self.device)
         
         # Embed the dataset and dataloader
         self.dataset = dataset
         self.dataloader = dataloader
-        
-        self.model = torch.hub.load('RF5/danbooru-pretrained', 'resnet18',
-                                    pretrained=False)
-
-        # Load the pretrained weights
-        checkpoint = torch.hub.load_state_dict_from_url(
-            'https://github.com/RF5/danbooru-pretrained/releases/download/v0.1/resnet18-3f77756f.pth',
-            map_location=self.device.type
-        )
-        state_dict = {key.replace("module.", ""): value 
-                      for key, value in checkpoint.items()}
-
-        self.model.load_state_dict(state_dict)
-
+            
         # Freezing the weights of the pretrained model
         for param in self.model[0].parameters():
             param.requires_grad = False
@@ -116,7 +158,7 @@ class MangaModel(nn.Module):
         self.model[1].append(nn.Threshold(0, 10))
             
         self.model.to(self.device)
-        summary(self.model, (3, 224, 224))
+#         summary(self.model, (3, 224, 224))
         
         # Set the loss function for Regression
         self.criterion = nn.MSELoss()
@@ -132,5 +174,7 @@ class MangaModel(nn.Module):
                                      self.criterion,
                                      self.optimizer,
                                      num_epochs=num_epochs)
+        
+        
     def forward(self, X):
         return self.model(X)

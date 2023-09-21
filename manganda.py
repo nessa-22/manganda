@@ -5,13 +5,15 @@ import streamlit as st
 from io import BytesIO
 import pickle
 import torch
+import torch.nn as nn
 import joblib, os
 import numpy as np
 from PIL import Image
 import torchvision.transforms as transforms
 
-# from dataset import MangaDataset
-# from dataloader import MangaDataloader
+from danbooru_resnet import *
+from dataset import MangaDataset
+from dataloader import MangaDataloader
 from manganda_util import MangaModel, train_model
 
 
@@ -42,6 +44,50 @@ def load_pkl(name, prompt=False):
         print('Pickle file loaded.')
     
     return pkl
+
+# class MangaModel(nn.Module):
+#     """Regression Model for Rating Mangas"""
+#     def __init__(self, dataset, dataloader, num_epochs=500, save_file='saves/MangaModel.pth'):
+#         super(MangaModel, self).__init__()
+#         """Initialize with the trained parameters, else retrain from scratch
+#         """        
+#         # Get the device for loading the model
+#         self.device = torch.device('cuda' if torch.cuda.is_available()
+#                                    else 'cpu')
+#         self.model = resnet18(pretrained=False)
+#         self.model.to(self.device)
+        
+#         # Embed the dataset and dataloader
+#         self.dataset = dataset
+#         self.dataloader = dataloader
+            
+#         # Freezing the weights of the pretrained model
+#         for param in self.model[0].parameters():
+#             param.requires_grad = False
+#         self.model[1][8] = nn.Linear(512, 1)
+#         self.model[1].append(nn.Threshold(0, 10))
+            
+#         self.model.to(self.device)
+# #         summary(self.model, (3, 224, 224))
+        
+#         # Set the loss function for Regression
+#         self.criterion = nn.MSELoss()
+
+#         # Only the parameters of the regressor are being optimized
+#         self.optimizer = optim.Adam(self.model[1].parameters(), lr=0.001)
+        
+#         # Load the retrained model, else, train
+#         try:
+#             self.model.load_state_dict(torch.load(save_file))
+#         except:
+#             self.model = train_model(self,
+#                                      self.criterion,
+#                                      self.optimizer,
+#                                      num_epochs=num_epochs)
+        
+        
+#     def forward(self, X):
+#         return self.model(X)
 
 def plot_predictions(x, model):
     """Plot sample images and print prediction"""
@@ -103,11 +149,15 @@ def file_upload():
     file.close()
         
 
+torch.hub.load('RF5/danbooru-pretrained', 'resnet18', pretrained=False)
 
 if __name__ == "__main__":
-    st.image('manganda.png', width=500)
-    model_path = os.path.abspath('model.pth')
+    st.image('manganda.png', width=800)
+#     model_path = os.path.abspath('model.pth')
     model = torch.load('model.pth')
-    
+#     dataset = MangaDataset()
+#     dataloader = MangaDataloader(dataset, batch_size=24)
+#     model = MangaModel(dataset, dataloader)
+
 
     file_upload()
