@@ -12,8 +12,8 @@ from PIL import Image
 import torchvision.transforms as transforms
 
 from danbooru_resnet import *
-from dataset import MangaDataset
-from dataloader import MangaDataloader
+# from dataset import MangaDataset
+# from dataloader import MangaDataloader
 from manganda_util import MangaModel, train_model
 
 
