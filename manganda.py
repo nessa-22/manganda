@@ -149,7 +149,7 @@ def file_upload():
     file.close()
         
 
-torch.hub.load('RF5/danbooru-pretrained', 'resnet18', pretrained=False)
+# torch.hub.load('RF5/danbooru-pretrained', 'resnet18', pretrained=False)
 
 if __name__ == "__main__":
     st.image('manganda.png', width=800)
